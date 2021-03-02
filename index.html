@@ -1,0 +1,30 @@
+<body style="height: 100vh; background: #111; text-align: center;">
+    <canvas  id="c" width="400" height="400"></canvas>
+    <script type="text/javascript">
+        context = c.getContext("2d");
+        const bird = new Image();
+        bird.src = "bird.png";
+        birdX = birdDY = score = bestScore = 0;
+        interval = birdSize = pipeWidth = TopPipeGapBottomY = 24;
+        birdY = pipeGap = 200;
+        canvasSize = pipeX = 400;
+        c.onclick = () =>(birdDY = 9);
+        setInterval(() => {
+            context.fillStyle ="skyblue";
+            context.fillRect(0,0,canvasSize,canvasSize);// draw sky background
+            birdY -= birdDY -= 0.5;// gravity for bird
+            context.drawImage(bird, birdX, birdY, birdSize * (512/512), birdSize);// draw bird
+            context.fillStyle = "green";
+            pipeX -= 8;
+            pipeX < -pipeWidth && ((pipeX = canvasSize), (TopPipeGapBottomY = pipeGap * Math.random()));
+            context.fillRect(pipeX, 0, pipeWidth, TopPipeGapBottomY);// make top pipe
+            context.fillRect(pipeX, TopPipeGapBottomY + pipeGap, pipeWidth, canvasSize);//make bottom pipe
+            context.fillStyle = "black";
+            context.fillText(score++, 9, 25);
+            bestScore = bestScore < score ? score : bestScore;
+            context.fillText(`Best:${bestScore}`, 9, 50);
+            (((birdY < TopPipeGapBottomY || birdY > TopPipeGapBottomY + pipeGap) && pipeX < birdSize * (512/512)) || birdY > canvasSize) && 
+            ((birdDY = 0), (birdY = 200), (pipeX = canvasSize), (score = 0))// bird dies
+        }, interval)
+    </script>
+</body>
